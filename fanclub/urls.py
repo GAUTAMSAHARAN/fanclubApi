@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'chatroom', views.ChatroomViewSet)
 router.register(r'messages', views.MessageViewSet)
+router.register(r'friends', views.FriendViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

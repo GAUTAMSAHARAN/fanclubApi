@@ -16,4 +16,9 @@ class MessageSerializers(serializers.ModelSerializer):
 class UserSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
+        fields = ['username', 'email', 'password']
+
+class FriendSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Friends
         fields = "__all__"
