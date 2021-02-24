@@ -6,6 +6,13 @@ from django.contrib.auth.models import User
 class Chatroom(models.Model):
     name = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now=True)
+    TYPE_CHOICES=[
+        ('Movies', 'M'),
+        ('Coding', 'C'),
+        ('Study', 'S'),
+    ]
+    type = models.CharField(max_length=50, choices=TYPE_CHOICES, default='Movies')
+    desc = models.CharField(max_length=100, blank=True)
     creater = models.ForeignKey(User, related_name='my_rooms', on_delete=models.CASCADE)
     admins = models.ManyToManyField(User, related_name='admin_rooms', blank=True)
     members = models.ManyToManyField(User, related_name="joined_rooms", blank=True)

@@ -20,7 +20,7 @@ class ChatroomViewSet(viewsets.ModelViewSet):
     queryset = models.Chatroom.objects.all()
     serializer_class = serializers.ChatroomSerializers
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['members', 'admins', 'creater', 'created_at']
+    filterset_fields = ['members', 'admins', 'creater', 'created_at', 'type']
     search_fields = ['name']
 
 class MessageViewSet(viewsets.ModelViewSet):
