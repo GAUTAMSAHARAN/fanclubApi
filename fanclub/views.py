@@ -49,21 +49,48 @@ class ChatroomViewSet(viewsets.ModelViewSet):
     queryset = models.Chatroom.objects.all()
     serializer_class = serializers.ChatroomSerializers
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['members', 'admins', 'creater', 'created_at', 'type']
+    filterset_fields = ['members', 'admins', 'creater', 'created_at', 'type', 'name']
     search_fields = ['name']
 
     @action(methods=['get', ], detail=False, url_path='userGroups', url_name='userGroups')
     def get_user_groups(self, request):
-        groups = models.Chatroom.objects.filter(Q(admins=request.user.pk) | Q(members=request.user.pk) | Q(creater=request.user.pk))
+        groups = models.Chatroom.objects.filter(Q(admins=request.user) | Q(creater=request.user) | Q(members=request.user))
         serializer = serializers.ChatroomSerializers(groups, many=True)
+        return Response(serializer.data)
+
+    @action(methods=['patch', ], detail=True, url_path='updateadmins', url_name='updateadmins')
+    def updateAdmins(self, request, pk):
+        group = models.Chatroom.objects.get(pk = pk)
+        admin_array = request.data.get('admin_array')
+        newAdmin = []
+        for element in admin_array:
+            temp = models.User.objects.get(pk = element)
+            newAdmin.append(temp)
+        group.admins.set(newAdmin)
+        group.save()
+        serializer = serializers.ChatroomSerializers(group)
+        return Response(serializer.data)
+
+    @action(methods=['patch', ], detail=True, url_path='updatemember', url_name='updatemember')
+    def updateMembers(self, request, pk):
+        group = models.Chatroom.objects.get(pk = pk)
+        member_array = request.data.get('member_array')
+        newMember = []
+        for element in member_array:
+            temp = models.User.objects.get(pk = element)
+            newMember.append(temp)
+        group.members.set(newMember)
+        group.save()
+        serializer = serializers.ChatroomSerializers(group)
         return Response(serializer.data)
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = models.Messages.objects.all()
     serializer_class = serializers.MessageSerializers
 
-class FriendViewSet(viewsets.ModelViewSet):
-    queryset = models.Friends.objects.all()
-    serializer_class = serializers.FriendSerializers
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['sender', 'receiver']
+class BioViewSet(viewsets.ModelViewSet):
+    queryset = models.Bio.objects.all()
+    serializer_class = serializers.BioSerializers    
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['user']
+    search_fields = ['user']

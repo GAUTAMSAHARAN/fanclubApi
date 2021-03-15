@@ -7,6 +7,7 @@ from channels.generic.websocket import WebsocketConsumer
 from fanclub import models, serializers
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
+from fanclub import serializers
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -78,17 +79,36 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         text = data['text']
         group = models.Chatroom.objects.get(pk = self.group_id)
-        creater_user = models.User.objects.get(pk = data['userId'])
-
+        creater_user = models.User.objects.get(pk = data['userid'])
         if creater_user in self.access:
             message = models.Messages.objects.create(writer = creater_user, message = text, room=group)
+            serializer = serializers.MessageSerializers(message)
+            data = serializer.data
             content = {
                 'command': 'new_message',
-                'message': self.message_to_json(message)
+                'message': data
             }
             self.send_chat_message(content)
         else:
             self.disconnect('Sorry, you are not allowed to send msg in this group')
+
+    def new_image_message(self, data):
+        id  = data['id']
+        try:
+            message = models.Messages.objects.get(pk = id)
+        except:
+            self.disconnect('sorry, some error occurs')
+        creater_user = models.User.objects.get(pk = data['userid'])
+        if creater_user in self.access:
+            serializer = serializers.MessageSerializers(message)
+            data = serializer.data
+            content = {
+                'command': 'new_image_message',
+                'message': data
+            }
+            self.send_chat_message(content)
+        else:
+            self.disconnect('Sorry, some error occurs')
 
     def messages_to_json(self, messages):
         result = []
@@ -96,7 +116,7 @@ class ChatConsumer(WebsocketConsumer):
             result.append(self.message_to_json(message))
         return result
 
-    def message_to_json(self, message):
+    def message_to_json(self, message): 
         return {
             'id': str(message.id),
             'creater': message.writer.id,
@@ -108,6 +128,7 @@ class ChatConsumer(WebsocketConsumer):
         'init_chat': init_chat,
         'fetch_messages': fetch_messages,
         'new_message': new_message,
+        'new_image_message': new_image_message
     }
 
     # Receive message from WebSocket
@@ -124,7 +145,7 @@ class ChatConsumer(WebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
             }
         )
 
