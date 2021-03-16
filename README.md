@@ -1,7 +1,7 @@
 # fanclubApi
 **fanclub is a web chatting app, where you can creater groups send messages and images via websockets with dark and light mode, also have google and facebook registration**
 
-This is the repository for the **backend** application of Bug Tracker. Click [here](https://github.com/GAUTAMSAHARAN/fanclub) to go to the frontend repository.
+This is the repository for the **backend** application of fanclub. Click [here](https://github.com/GAUTAMSAHARAN/fanclub) to go to the frontend repository.
 
 # Setup instructions:
 
