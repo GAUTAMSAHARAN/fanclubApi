@@ -15,15 +15,6 @@ class UserSerializers(serializers.ModelSerializer):
         model = User
         fields = ['id','username', 'email', 'password']
 
-    def create(self, validated_data):
-        user = User(
-            email=validated_data['email'],
-            username=validated_data['username']
-        )
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
-
 class ChatroomSerializers(serializers.ModelSerializer):
     admins = UserSerializers(many=True, read_only=True)
     members = UserSerializers(many=True, read_only=True)

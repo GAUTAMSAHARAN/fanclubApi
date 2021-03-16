@@ -71,6 +71,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -114,8 +117,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'discord',
-        'USER': 'gautam',
-        'PASSWORD': '0110110',
+        'USER': '<your mysql username>',
+        'PASSWORD': '<your mysql password',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '8000',
     }

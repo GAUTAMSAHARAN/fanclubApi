@@ -16,6 +16,7 @@ from rest_auth.registration.serializers import SocialLoginSerializer
 from rest_framework.decorators import action
 from django.db.models import Q
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 
 class FacebookLogin(SocialLoginView):
@@ -44,6 +45,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializers
     filter_backends = [DjangoFilterBackend ,filters.SearchFilter]
     search_fields = ['username', 'email']
+    permission_classes = [IsAuthenticated]
 
 class ChatroomViewSet(viewsets.ModelViewSet):
     queryset = models.Chatroom.objects.all()
@@ -51,6 +53,7 @@ class ChatroomViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['members', 'admins', 'creater', 'created_at', 'type', 'name']
     search_fields = ['name']
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['get', ], detail=False, url_path='userGroups', url_name='userGroups')
     def get_user_groups(self, request):
@@ -87,6 +90,7 @@ class ChatroomViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = models.Messages.objects.all()
     serializer_class = serializers.MessageSerializers
+    permission_classes = [IsAuthenticated]
 
 class BioViewSet(viewsets.ModelViewSet):
     queryset = models.Bio.objects.all()
@@ -94,3 +98,4 @@ class BioViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['user']
     search_fields = ['user']
+    permission_classes = [IsAuthenticated]
