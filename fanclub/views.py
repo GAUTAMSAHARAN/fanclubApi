@@ -57,7 +57,9 @@ class ChatroomViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get', ], detail=False, url_path='userGroups', url_name='userGroups')
     def get_user_groups(self, request):
-        groups = models.Chatroom.objects.filter(Q(admins=request.user) | Q(creater=request.user) | Q(members=request.user))
+        groups = models.Chatroom.objects.filter(Q(creater=request.user) | Q(members = request.user) | Q(admins = request.user))
+        groups = set(groups)
+        groups = list(groups)
         serializer = serializers.ChatroomSerializers(groups, many=True)
         return Response(serializer.data)
 
