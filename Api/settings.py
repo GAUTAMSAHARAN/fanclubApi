@@ -117,8 +117,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'discord',
-        'USER': '<your mysql username>',
-        'PASSWORD': '<your mysql password',
+        'USER': 'gautam',
+        'PASSWORD': '0110110',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '8000',
     }
